@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"os"
 	"path"
 	"regexp"
@@ -283,6 +284,7 @@ func ExecMax(db *sql.DB, dialect string, m MigrationSource, dir MigrationDirecti
 	// Apply migrations
 	applied := 0
 	for _, migration := range migrations {
+		start := time.Now()
 		var executor SqlExecutor
 
 		if migration.DisableTransaction {
@@ -329,6 +331,7 @@ func ExecMax(db *sql.DB, dialect string, m MigrationSource, dir MigrationDirecti
 			}
 		}
 
+		log.Println("Applied migration:", migration.Id, "in", time.Now().Sub(start))
 		applied++
 	}
 
